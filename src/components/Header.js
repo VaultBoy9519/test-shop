@@ -1,4 +1,4 @@
-const Header = () => {
+function Header() {
   return (<header className="d-flex justify-between align-center p-40">
     <div className="headerLeft d-flex align-center">
       <img width={40} height={40} src="/img/logo.png" />
