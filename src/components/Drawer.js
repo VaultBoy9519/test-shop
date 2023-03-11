@@ -1,30 +1,21 @@
-function Drawer(props) {
+function Drawer({ onClose, cartItems = [] }) {
   return (
     <div className="overlay">
       <div className="drawer">
         <h2 className="mb-30 d-flex justify-between">Корзина
-          <img className="cu-p" onClick={props.onClose} src="/img/btn-remove.svg" alt="CloseCart" />
+          <img className="cu-p" onClick={onClose} src="/img/btn-remove.svg" alt="CloseCart" />
         </h2>
         <div className="items">
-          <div className="cartItem d-flex align-center mb-20">
-            <div style={{ backgroundImage: "url(/img/sneakers/1.jpg)" }} className="cartItemImg">
-            </div>
-            <div className="mr-20 flex">
-              <p className="mb-5">Мужские кроссовки Nike Blazer Mid Suede</p>
-              <b>12990 руб.</b>
-            </div>
-            <img className="removeBtn" src="/img/btn-remove.svg" alt="Remove" />
-          </div>
-          <div className="cartItem d-flex align-center mb-20">
-            <div style={{ backgroundImage: "url(/img/sneakers/1.jpg)" }} className="cartItemImg">
-
-            </div>
-            <div className="mr-20 flex">
-              <p className="mb-5">Мужские кроссовки Nike Blazer Mid Suede</p>
-              <b>12990 руб.</b>
-            </div>
-            <img className="removeBtn" src="/img/btn-remove.svg" alt="Remove" />
-          </div>
+          {cartItems.map((obj) =>
+            <div className="cartItem d-flex align-center mb-20">
+              <div style={{ backgroundImage: `url(${obj.imageUrl})` }} className="cartItemImg">
+              </div>
+              <div className="mr-20 flex">
+                <p className="mb-5">{obj.title}</p>
+                <b>{obj.price} руб.</b>
+              </div>
+              <img className="removeBtn" src="/img/btn-remove.svg" alt="Remove" />
+            </div>)}
         </div>
         <div className="cartTotalBlock">
           <ul className="cartTotalBlock">
@@ -46,3 +37,4 @@ function Drawer(props) {
 };
 
 export default Drawer;
+
