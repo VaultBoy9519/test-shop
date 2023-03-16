@@ -1,0 +1,48 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "title": "Мужские кроссовки Nike Air Max 270",
+      "price": 15600,
+      "imageUrl": "/img/sneakers/2.jpg"
+    },
+    {
+      "id": 2,
+      "title": "Мужские кроссовки Nike Blazer Dart Vader",
+      "price": 8499,
+      "imageUrl": "/img/sneakers/3.jpg"
+    },
+    {
+      "id": 3,
+      "title": "Мужские кроссовки Puma X Aka Boku Future Rider",
+      "price": 8999,
+      "imageUrl": "/img/sneakers/4.jpg"
+    },
+    {
+      "id": 4,
+      "title": "Мужские кроссовки Nike Kyrie 7",
+      "price": 5344,
+      "imageUrl": "/img/sneakers/5.jpg"
+    },
+    {
+      "id": 5,
+      "title": "Мужские кроссовки Nike LeBron XVIII",
+      "price": 18900,
+      "imageUrl": "/img/sneakers/6.jpg"
+    },
+    {
+      "id": 6,
+      "title": "Мужские кроссовки Puma X Aka Joka the Popularity",
+      "price": 21700,
+      "imageUrl": "/img/sneakers/7.jpg"
+    },
+    {
+      "id": 7,
+      "title": "Мужские кроссовки Nike Blazer Mid Suede",
+      "price": 12999,
+      "imageUrl": "/img/sneakers/1.jpg"
+    }
+  ],
+  "cart": [],
+  "favourites": []
+}
