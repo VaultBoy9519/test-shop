@@ -18,14 +18,23 @@ function App() {
 
   React.useEffect(() => {
     async function fetchData() {
-      const cartResponse = await axios.get("http://localhost:3001/cart");
-      const favouritesResponse = await axios.get("http://localhost:3001/favourites");
-      const itemsResponse = await axios.get("http://localhost:3001/items");
-      setIsLoading(false);
-      setCartItems(cartResponse.data);
-      setFavourites(favouritesResponse.data);
-      setItems(itemsResponse.data);
-    };
+      try {
+
+        const [cartResponse, favouritesResponse, itemsResponse] = await Promise.all([
+          axios.get("http://localhost:3001/cart"),
+          axios.get("http://localhost:3001/favourites"),
+          axios.get("http://localhost:3001/items")
+        ]);
+
+        setIsLoading(false);
+        setCartItems(cartResponse.data);
+        setFavourites(favouritesResponse.data);
+        setItems(itemsResponse.data);
+      } catch (error) {
+        console.log(`Ошибка при загрузке данных`);
+        console.error(error);
+      }
+    }
 
     fetchData();
   }, []);
@@ -33,40 +42,57 @@ function App() {
 
   const onAddToCart = async (obj) => {
     try {
-      if (cartItems.find(item => Number(item.id) === Number(obj.id))) {
-        axios.delete(`http://localhost:3001/cart/${obj.id}`);
-        setCartItems(prevState => prevState.filter(item => Number(item.id) !== Number(obj.id)));
+      const findItem = cartItems.find(item => Number(item.parentId) === Number(obj.id));
+      if (findItem) {
+        setCartItems(prevState => prevState.filter(item => Number(item.parentId) !== Number(obj.id)));
+        axios.delete(`http://localhost:3001/cart/${findItem.id}`);
       } else {
+        setCartItems(prevState => [...prevState, obj]);
         const { data } = await axios.post("http://localhost:3001/cart", obj);
-        setCartItems(prevState => [...prevState, data]);
+        setCartItems((prevState => prevState.map(item => {
+          if (item.parentId === data.parentId) {
+            return {
+              ...item,
+              id: data.id
+            };
+          }
+          return item;
+        })));
       }
-    } catch {
-      console.log(`Не удалось добавить в корзину`);
+    } catch (error) {
+      console.log(`Ошибка при добавлении в корзину`);
+      console.error(error);
     }
   };
 
   const onRemoveItem = (id) => {
-    axios.delete(`http://localhost:3001/cart/${id}`);
-    setCartItems(prevState => prevState.filter(item => item.id !== id));
+    try {
+      setCartItems(prevState => prevState.filter(item => Number(item.id) !== Number(id)));
+      axios.delete(`http://localhost:3001/cart/${id}`);
+    } catch (error) {
+      console.log(`Ошибка при удалении из корзины`);
+      console.error(error);
+    }
   };
 
   const onAddToFavourite = async (obj) => {
     try {
       if (favourites.find(item => Number(item.id) === Number(obj.id))) {
-        axios.delete(`http://localhost:3001/favourites/${obj.id}`);
         setFavourites(prevState => prevState.filter(item => Number(item.id) !== Number(obj.id)));
+        await axios.delete(`http://localhost:3001/favourites/${obj.id}`);
 
       } else {
         const { data } = await axios.post("http://localhost:3001/favourites", obj);
         setFavourites(prevState => [...prevState, data]);
       }
     } catch (error) {
-      console.log(`не удалось сохранить в избранное`);
+      console.log(`Ошибка при сохранении в избранное`);
+      console.error(error);
     }
   };
 
   const isItemAdded = (id) => {
-    return cartItems.some(obj => Number(obj.id) === Number(id));
+    return cartItems.some(obj => Number(obj.parentId) === Number(id));
   };
 
   const isItemFavourited = (id) => {
@@ -86,12 +112,13 @@ function App() {
         setCartItems
       }}>
       <div className="wrapper clear">
-        {cartOpened && <Drawer cartItems={cartItems}
-                               setCartItems={setCartItems}
-                               onClose={() => {
-                                 setCartOpened(false);
-                               }}
-                               onRemove={onRemoveItem} />}
+        <Drawer cartItems={cartItems}
+                setCartItems={setCartItems}
+                onClose={() => {
+                  setCartOpened(false);
+                }}
+                onRemove={onRemoveItem}
+                opened={cartOpened} />
         <Header onClickCart={() => {
           setCartOpened(true);
         }} />
